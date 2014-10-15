@@ -1,45 +1,29 @@
 <?php
 
-class EmailTest extends PHPUnit_Framework_TestCase {
+class EmailTest extends PHPUnit_Framework_TestCase
+{
+    public function emailInputProvider()
+    {
+        return array(
+            array(array('test' => null),                 true),
+            array(array('test' => ''),                   true),
+            array(array('test' => 'geliscan@gmail.com'), true),
+            array(array('test' => 'SimpleValidator'),    false),
+        );
+    }
 
-    public function setUp() {
-        $this->rules = array(
+    /**
+     * @covers Validator::email
+     * @dataProvider emailInputProvider
+     */
+    public function testEmail($inputs, $expected)
+    {
+        $rules  = array(
             'test' => array('email')
         );
-    }
 
-    public function tearDown() {
-        
-    }
+        $validation_result = SimpleValidator\Validator::validate($inputs, $rules);
 
-    public function testValidEmail() {
-        $inputs = array('test' => 'geliscan@gmail.com');
-        $validation_result = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validation_result->isSuccess(), true);
+        $this->assertEquals($expected, $validation_result->isSuccess());
     }
-
-    public function testInvalidEmail() {
-        $inputs = array('test' => 'SimpleValidator');
-        $validation_result = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validation_result->isSuccess(), false);
-    }
-
-    public function testEmptyInput() {
-        $inputs = array(
-            'test' => ''
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testNullInput() {
-        $inputs = array(
-            'test' => null
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
 }
-
-?>

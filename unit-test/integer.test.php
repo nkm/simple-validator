@@ -1,103 +1,39 @@
 <?php
 
-class IntegerTest extends PHPUnit_Framework_TestCase {
+class IntegerTest extends PHPUnit_Framework_TestCase
+{
+    public function integerInputProvider()
+    {
+        return array(
+            array(array('test' => ''),       true),
+            array(array('test' => null),     true),
 
-    public $rules;
+            array(array('test' => 15),       true),
+            array(array('test' => -15),      true),
+            array(array('test' => 15.5),     false),
+            array(array('test' => 0x1A),     true),
+            array(array('test' => 0123),     true),
+            array(array('test' => 9e19),     false),
+            array(array('test' => -9e19),    false),
 
-    public function setUp() {
-        $this->rules = array(
+            array(array('test' => "15"),     true),
+
+            array(array('test' => "whatevs"), false),
+        );
+    }
+
+    /**
+     * @covers Validator::integer
+     * @dataProvider integerInputProvider
+     */
+    public function testInteger($inputs, $expected)
+    {
+        $rules  = array(
             'test' => array('integer')
         );
-    }
 
-    public function testIntegerInput() {
-        $inputs = array(
-            'test' => 15
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
-    }
+        $validation_result = SimpleValidator\Validator::validate($inputs, $rules);
 
-    public function testIntegerStringInput() {
-        $inputs = array(
-            'test' => "15"
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
+        $this->assertEquals($expected, $validation_result->isSuccess());
     }
-
-    public function testFloatInput() {
-        $inputs = array(
-            'test' => 15.5
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testStringInput() {
-        $inputs = array(
-            'test' => "test12"
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testHexadecimalIntegerInput() {
-        $inputs = array(
-            'test' => 0x1A
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
-    }
-
-    public function testNegativeIntegerInput() {
-        $inputs = array(
-            'test' => -15
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
-    }
-
-    public function testOctalNumberInput() {
-        $inputs = array(
-            'test' => 0123
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
-    }
-
-    public function testVeryBigInput() {
-        $inputs = array(
-            'test' => 9E19
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testVerySmallInput() {
-        $inputs = array(
-            'test' => -9E19
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testEmptyInput() {
-        $inputs = array(
-            'test' => ''
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testNullInput() {
-        $inputs = array(
-            'test' => null
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
 }
-
-?>

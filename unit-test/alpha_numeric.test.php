@@ -1,26 +1,28 @@
 <?php
 
-class AlphaTest extends PHPUnit_Framework_TestCase
+class AlphaNumericTest extends PHPUnit_Framework_TestCase
 {
-    public function alphaInputProvider()
+    public function alphaNumericInputProvider()
     {
         return array(
             array(array('test' => null),          true),
             array(array('test' => ''),            true),
+            array(array('test' => 123),           true),
+            array(array('test' => '123'),         true),
             array(array('test' => 'ABCDE'),       true),
-            array(array('test' => 'ABCDE123'),    false),
+            array(array('test' => 'ABCDE123'),    true),
             array(array('test' => 'ABCDE123?!@'), false),
         );
     }
 
     /**
-     * @covers Validator::alpha
-     * @dataProvider alphaInputProvider
+     * @covers Validator::alpha_numeric
+     * @dataProvider alphaNumericInputProvider
      */
-    public function testAlpha($inputs, $expected)
+    public function testAlphaNumeric($inputs, $expected)
     {
         $rules  = array(
-            'test' => array('alpha')
+            'test' => array('alpha_numeric')
         );
 
         $validation_result = SimpleValidator\Validator::validate($inputs, $rules);

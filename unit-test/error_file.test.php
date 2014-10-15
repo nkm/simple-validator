@@ -1,16 +1,37 @@
 <?php
 
-class ErrorFileTest extends PHPUnit_Framework_TestCase {
+class ErrorFileTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * @covers Validator::getErrors
+     */
+    public function testDefaultErrorFileInCurrentDirectory()
+    {
+        $inputs = array();
+        $rules  = array(
+            'name' => array('required')
+        );
+        $expected = array('name field is required');
 
-    public function testDefaultErrorFileInCurrentDirectory() {
-        $validator = SimpleValidator\Validator::validate(array(), array('name' => array('required')));
-        $this->assertEquals($validator->getErrors(), array('name field is required'));
+        $validation_result = SimpleValidator\Validator::validate($inputs, $rules);
+
+        $this->assertEquals($expected, $validation_result->getErrors());
     }
 
-    public function testDefaultErrorFileInALevelAboveDirectory() {
+    /**
+     * @covers Validator::getErrors
+     */
+    public function testDefaultErrorFileInALevelAboveDirectory()
+    {
+        $inputs = array();
+        $rules  = array(
+            'name' => array('required')
+        );
+        $expected = array('name field is required');
+
         chdir("..");
-        $validator = SimpleValidator\Validator::validate(array(), array('name' => array('required')));
-        $this->assertEquals($validator->getErrors(), array('name field is required'));
-    }
+        $validation_result = SimpleValidator\Validator::validate($inputs, $rules);
 
+        $this->assertEquals(array('name field is required'), $validation_result->getErrors());
+    }
 }

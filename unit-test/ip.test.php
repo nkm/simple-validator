@@ -1,49 +1,31 @@
 <?php
 
-class IPTest extends PHPUnit_Framework_TestCase {
+class IPTest extends PHPUnit_Framework_TestCase
+{
+    public function ipInputProvider()
+    {
+        return array(
+            array(array('test' => null),                              true),
+            array(array('test' => ''),                                true),
+            array(array('test' => "89.250.130.65"),                   true),
+            array(array('test' => "89.300.130.65"),                   false),
+            array(array('test' => "2a03:2880:10:1f02:face:b00c::25"), true),
+            array(array('test' => "Simple Validator"),                false),
+        );
+    }
 
-    public function setUp() {
-        $this->rules = array(
+    /**
+     * @covers Validator::ip
+     * @dataProvider ipInputProvider
+     */
+    public function testIp($inputs, $expected)
+    {
+        $rules  = array(
             'test' => array('ip')
         );
-    }
 
-    public function tearDown() {
-        
-    }
+        $validation_result = SimpleValidator\Validator::validate($inputs, $rules);
 
-    public function testValidIPv4Input() {
-        $inputs = array(
-            'test' => "89.250.130.65"
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
+        $this->assertEquals($expected, $validation_result->isSuccess());
     }
-
-    public function testValidFormatInvalidIPInput() {
-        $inputs = array(
-            'test' => "89.300.130.65"
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testValidIPv6Input() {
-        $inputs = array(
-            'test' => "2a03:2880:10:1f02:face:b00c::25"
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
-    }
-
-    public function testInvalidFormatInput() {
-        $inputs = array(
-            'test' => "Simple Validator"
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
 }
-
-?>

@@ -1,71 +1,54 @@
 <?php
 
-class RequiredTest extends PHPUnit_Framework_TestCase {
+class RequiredTest extends PHPUnit_Framework_TestCase
+{
+    public function requiredInputProvider()
+    {
+        return array(
+            array(null,                     false),
+            array(array(),                  false),
+            array(array('test' => null),    false),
+            array(array('test' => 'null'),  true),
 
-    public $rules;
+            array(array('test' => ''),      false),
+            array(array('test' => ' '),     false),
+            array(array('test' => "\t"),    false),
+            array(array('test' => "\n"),    false),
+            array(array('test' => "\r"),    false),
+            array(array('test' => ' '),     true), // non-breaking space
 
-    public function setUp() {
-        $this->rules = array(
+            array(array('test' => 0),       true),
+            array(array('test' => 0.0),     true),
+            array(array('test' => .0),      true),
+            array(array('test' => 0.),      true),
+            array(array('test' => '0'),     true),
+            array(array('test' => '0.0'),   true),
+            array(array('test' => '.0'),    true),
+            array(array('test' => '0.'),    true),
+
+            array(array('test' => true),    true),
+            array(array('test' => false),   true),
+            array(array('test' => 'true'),  true),
+            array(array('test' => 'false'), true),
+
+            array(array('test' => []),      true),
+            array(array('test' => '[]'),    true),
+            array(array('test' => '{}'),    true),
+        );
+    }
+
+    /**
+     * @covers Validator::required
+     * @dataProvider requiredInputProvider
+     */
+    public function testRequired($inputs, $expected)
+    {
+        $rules  = array(
             'test' => array('required')
         );
-    }
 
-    public function tearDown() {
-        
-    }
+        $validation_result = SimpleValidator\Validator::validate($inputs, $rules);
 
-    public function testEmptyInput() {
-        $inputs = array(
-            'test' => ''
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
+        $this->assertEquals($expected, $validation_result->isSuccess());
     }
-
-    public function testNullInput() {
-        $inputs = array(
-            'test' => null
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testOnlyWhiteSpaceInput() {
-        $inputs = array(
-            'test' => ' '
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testUnassignedInput() {
-        $inputs = array();
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testNullInputArray() {
-        $inputs = null;
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), false);
-    }
-
-    public function testZeroInput() {
-        $inputs = array(
-            'test' => '0'
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
-    }
-
-    public function testZeroPointZeroInput() {
-        $inputs = array(
-            'test' => 0.0
-        );
-        $validator = SimpleValidator\Validator::validate($inputs, $this->rules);
-        $this->assertEquals($validator->isSuccess(), true);
-    }
-
 }
-
-?>

@@ -31,7 +31,6 @@ class FloatTest extends PHPUnit_Framework_TestCase
             array(array('test' => -15),                   false),
             array(array('test' => 0x1A),                  false),
             array(array('test' => 0123),                  false),
-            array(array('test' => 0b11111111),            false),
 
             array(array('test' => "15"),                  false),
             array(array('test' => "-15"),                 false),

@@ -20,7 +20,6 @@ class NumericTest extends PHPUnit_Framework_TestCase
             array(array('test' => 9e19),                  true),
             array(array('test' => -9e19),                 true),
             array(array('test' => 0123),                  true),
-            array(array('test' => 0b11111111),            true),
             array(array('test' => 0x1A),                  true),
 
             array(array('test' => "15"),                  true),

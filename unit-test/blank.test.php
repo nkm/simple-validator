@@ -31,7 +31,7 @@ class BlankTest extends PHPUnit_Framework_TestCase
             array(array('test' => 'true'),  false),
             array(array('test' => 'false'), false),
 
-            array(array('test' => []),      false),
+            array(array('test' => array()),      false),
             array(array('test' => '[]'),    false),
             array(array('test' => '{}'),    false),
         );

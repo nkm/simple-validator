@@ -31,7 +31,7 @@ class RequiredTest extends PHPUnit_Framework_TestCase
             array(array('test' => 'true'),  true),
             array(array('test' => 'false'), true),
 
-            array(array('test' => []),      true),
+            array(array('test' => array()),      true),
             array(array('test' => '[]'),    true),
             array(array('test' => '{}'),    true),
         );
